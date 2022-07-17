@@ -1,6 +1,6 @@
-@extends('layouts.dashboard')
+@extends('layouts.dashboard_admin')
 
-@section('page-title', 'Create Association')
+@section('page-title', 'انشاء جمعية')
 
 @section('content')
     <div class="container">
@@ -13,7 +13,7 @@
                 </ul>
             </div>
         @endif
-        <form action="{{route('associations.store')}}" method="post">
+        <form action="{{route('associations.store')}}" method="post" enctype="multipart/form-data">
             @csrf
             @include('admin.associations._form')
         </form>

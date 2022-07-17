@@ -38,7 +38,7 @@ class BasketController extends Controller
         try {
             $check = User::where('id', '=', $user->id)->exists();
             if ($check) {
-                $basket = Basket::create($request->all());
+                $basket = Basket::create($request->all()+ ['user_id' => $user->id]);
                 if ($basket) {
                     return new SuccessResource($basket);
                 }

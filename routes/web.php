@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PaymentsCallbackController;
+use App\Http\Controllers\PaymentsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,3 +39,7 @@ Route::get('/dashboard', function () {
 //});
 
 require __DIR__ . '/dashboard.php';
+
+Route::get('api/paymentsWithoutAuth/create/{project_id}/{amount}',[PaymentsController::class,'create']);
+Route::get('api/payments/callback/success',[PaymentsCallbackController::class,'success'])->name('payments.success');
+Route::get('api/payments/callback/cancel',[PaymentsCallbackController::class,'cancel'])->name('payments.cancel');

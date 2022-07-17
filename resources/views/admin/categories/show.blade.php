@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.dashboard_admin')
 
 @section('page-title', "عرض المشاريع في قسم :\n$category->name")
 
@@ -63,8 +63,6 @@
 
 
     </div>
-
-
 
 @endsection
 

@@ -22,8 +22,7 @@ class AdminFactory extends Factory
             'name' => $this->faker->name,
             'email' => $this->faker->safeEmail,
             'password' => Hash::make('password'),
-            'image_path' => '.',
-//            'remember_token' => Str::random(16),
+            'image_path' => 'uploads/associations/GJhq7hHkCxQ6SodhiRHZJZOcIw0lqG9EGW8CiudZ.jpg',
         ];
     }
 }

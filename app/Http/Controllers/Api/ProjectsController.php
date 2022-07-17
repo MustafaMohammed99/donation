@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProjectResource;
 use App\Http\Resources\SuccessResource;
 use App\Models\Category;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use phpDocumentor\Reflection\Types\Collection;
 use function Symfony\Component\String\s;
 
 class ProjectsController extends Controller
@@ -23,17 +25,24 @@ class ProjectsController extends Controller
             ->with([
                 'category',
                 'association:id,name,address,email',
+                'projects_paths'
             ])
             ->where('status', '=', 'accepted')
             ->get();
 
-        return SuccessResource::collection($entries);
+        return new SuccessResource($entries);
     }
 
     public function home()
     {
-//        $entries = Project::latest()->take(2)->get();
-        $entries = Project::latest()->take(2)->get();
+        $entries = Project::with([
+            'category',
+            'association:id,name,address,email',
+            'projects_paths'
+        ])
+            ->where('status', '=', 'accepted')
+            ->latest()->take(3)->get();
+
         $categories = Category::get();
         $sum_received_amount = Project::where('status', '=', 'accepted')->sum('received_amount');
         $sum_num_beneficiaries = Project::where('status', '=', 'accepted')->sum('num_beneficiaries');
@@ -43,13 +52,11 @@ class ProjectsController extends Controller
             'status' => true,
             'message' => 'Success Process :)',
             'data' => [
-                'numbers' => [
-                    'count_project' => $count_project,
-                    'sum_received_amount' => $sum_received_amount,
-                    'sum_num_beneficiaries' => (int)$sum_num_beneficiaries,
-                    ],
+                'count_project' => $count_project,
+                'sum_received_amount' => $sum_received_amount,
+                'sum_num_beneficiaries' => (int)$sum_num_beneficiaries,
                 'banners' => $categories,
-                'projects' => $entries,
+                'projects' =>  ProjectResource::collection($entries),
             ],
         ];
     }
@@ -60,12 +67,11 @@ class ProjectsController extends Controller
         $entries = Project::with([
             'category',
             'association:id,name,address,email',
-        ])
-            ->where('id', '=', $project->id)
+            'projects_paths'
+        ])->where('id', '=', $project->id)
             ->where('status', '=', 'accepted')
             ->get();
-
-        return SuccessResource::collection($entries);
+        return new ProjectResource($entries[0]);
     }
 
     public function update(Request $request, $id)
@@ -88,20 +94,26 @@ class ProjectsController extends Controller
 
     public function search(Request $request)
     {
-        $result = Project::where('status', '=', 'accepted')
+        $result = Project::with('projects_paths')->where('status', '=', 'accepted')
             ->where(function ($query) use ($request) {
                 $query->where('title', 'like', '%' . $request->search . '%');
-                $query->orWhere('description', 'like', '%' . $request->search . '%');
+//                $query->orWhere('description', 'like', '%' . $request->search . '%');
             })
             ->get();
 
         if ($result)
-            return new SuccessResource($result);
+            return [
+                'data' => ['data' => $result],
+                'status' => true,
+                'message' => 'Success Process:)'
+            ];
         else
             return [
                 'message' => $request->title . 'not found'
             ];
     }
+
+
 
 //    public function store(Request $request)
 //    {

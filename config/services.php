@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'thawani' => [
+        'secret_key' => env('THAWANI_SECRET_KEY'),
+        'publishable_key' => env('THAWANI_Publishable_KEY'),
+        'mode' => 'test',
+    ]
 ];

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ProjectResource;
 use App\Http\Resources\SuccessResource;
 use App\Models\Category;
 use App\Models\Project;

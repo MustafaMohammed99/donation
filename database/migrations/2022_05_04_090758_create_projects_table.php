@@ -24,14 +24,20 @@ return new class extends Migration {
             $table->double('price_stock'); // سعر السهم
             $table->double('require_amount'); // المبلغ المطلوب
             $table->double('received_amount')->default(0); //المبلغ المستلم
-            $table->enum('duration_unit', ['day', 'week', 'month', 'year'])->nullable();
-            $table->integer('interval') ->nullable();
+//            $table->enum('duration_unit', ['day', 'week', 'month', 'year'])->nullable();
+            $table->integer('interval');
+            $table->date("start_period")->nullable();
+            $table->date("end_period")->nullable();
+
+
             $table->integer('num_beneficiaries');
-            $table->integer('current_num_beneficiaries')->nullable();
-            $table->enum('status', ['pending', 'accepted', 'declined'])->default('pending');
+            $table->integer('current_num_beneficiaries')->default(0);
+            $table->enum('status', ['pending', 'accepted', 'declined', 'failed', 'completed','completed_partial'])->default('pending');
             $table->string('title');
-            $table->string('description');
+            $table->text('description');
             $table->timestamps();
+
+
 
 //    DB::table('projects')->insert([
 //    ['association_id' => '1', 'category_id' => '1', 'price_stock'=> '500', 'require_amount'=>'5000',

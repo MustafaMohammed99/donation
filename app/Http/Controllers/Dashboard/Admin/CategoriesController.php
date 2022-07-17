@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard;
+namespace App\Http\Controllers\Dashboard\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Project;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 
 class CategoriesController extends Controller
 {
     public function index()
     {
         $categories = Category::withCount([
-            'projects'=>function($query){
+            'projects' => function ($query) {
                 $query->where('status', '=', 'accepted');
             },])
             ->paginate(3);
@@ -35,15 +35,15 @@ class CategoriesController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate($this->rules());
-        $data = $request->all();
-        Category::create($data);
+        $request->validate($this->rules(new Category()));
+        $data = $request->except('image_path');
+        $data['image_path'] = $this->uploadImage_Path($request);
 
+        Category::create($data);
         return redirect()
             ->route('categories.index')
             ->with('success', 'Categories created!');
     }
-
 
     public function show(Category $category)
     {
@@ -57,7 +57,6 @@ class CategoriesController extends Controller
         ]);
     }
 
-
     public function edit($id)
     {
         $category = Category::findOrFail($id);
@@ -66,8 +65,11 @@ class CategoriesController extends Controller
 
     public function update(Request $request, Category $category)
     {
-        $request->validate($this->rules());
-        $category->update($request->all());
+        $request->validate($this->rules($category));
+        $data = $request->except('image_path');
+        $data['image_path'] = (($this->uploadImage_Path($request) ?? $category->image_path));
+
+        $category->update($data);
         return redirect()
             ->route('categories.index')
             ->with('success', 'Category updated!');
@@ -84,12 +86,40 @@ class CategoriesController extends Controller
 
 
     protected $rules = [
-        'name' => ['required', 'string',],
+        'name' => ['required', 'unique:categories,name', 'string',],
+
+        'image_path' => ['required', 'sometimes', 'image',],
+
     ];
 
-    protected function rules()
+
+    protected function rules($category)
     {
-        $rules = $this->rules;
-        return $rules;
+        return [
+            'name' => ['required', 'string', Rule::unique('categories')->ignore($category)],
+            'image_path' => ['required', 'sometimes', 'image',],
+
+        ];
     }
+
+    protected function uploadImage_Path(Request $request)
+    {
+        if (!$request->hasFile('image_path')) {
+            return;
+        }
+        if ($request->hasFile('image_path')) {
+            $file = $request->file('image_path');
+            if ($file->isValid()) {
+                $path = $file->store('/categories', [
+                    'disk' => 'uploads',
+                ]);
+            }
+        }
+        if ($path) {
+            return 'uploads/' . $path;
+        }
+        return;
+    }
+
+
 }
