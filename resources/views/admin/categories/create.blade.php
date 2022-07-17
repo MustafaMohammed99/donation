@@ -1,6 +1,6 @@
-@extends('layouts.dashboard')
+@extends('layouts.dashboard_admin')
 
-@section('page-title', 'Create Category')
+@section('page-title', 'انشاء قسم')
 
 @section('content')
     <div class="container">
@@ -13,7 +13,7 @@
                 </ul>
             </div>
         @endif
-        <form action="{{route('categories.store')}}" method="post">
+        <form action="{{route('categories.store')}}" method="post" enctype="multipart/form-data">
             @csrf
             @include('admin.categories._form')
         </form>

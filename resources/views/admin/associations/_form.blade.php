@@ -1,5 +1,5 @@
 <div class="form-group">
-   <x-form.input  id="name" name="name" label="Category Name"  :value="$association->name"  class="form-control-border" />
+   <x-form.input  id="name" name="name" label="Association Name"  :value="$association->name"  class="form-control-border" />
 </div>
 
 <div class="form-group">
@@ -29,16 +29,19 @@
     @enderror
 </div>
 
+
 <div class="form-group">
     <label for="image_path">Image Path</label>
-    <input type="text" name="image_path" id="image_path" value="{{old('image_path', $association->image_path)}}"
-           class="form-control @error('image_path') is-invalid @enderror">
+    <input type="file" name="image_path" id="image_path" accept="image/*"
+           class="uploadButton-input @error('image_path') is-invalid @enderror">
+
     @error('image_path')
+    <span class="uploadButton-file-name">Images  that might be helpful in describing your job</span>
     <p class="invalid-feedback">{{$message}}</p>
     @enderror
 </div>
 
 <div class="form-group">
-    <button class="btn-primary"> Save</button>
+    <button  class="btn-primary"> Save</button>
 </div>
 

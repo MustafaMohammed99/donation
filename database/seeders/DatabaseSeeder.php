@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\Association;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,10 +17,12 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 //         \App\Models\User::factory(10)->create();
-//         Admin::factory(5)->create();
+         Association::factory(1000)->create();
+//        factory(Association::class, 5000)->create();
 
-        $this->call([
-            AdminTableSeeder::class,
-        ]);
+//        $this->call([
+//            AdminTableSeeder::class,
+//        ]);
+
     }
 }

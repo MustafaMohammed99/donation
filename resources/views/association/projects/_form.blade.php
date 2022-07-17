@@ -27,8 +27,33 @@
 </div>
 
 <div class="form-group">
+    <x-form.input type="number" min="1" id="interval" name="interval" label="interval execution project : "
+                  :value="$project->interval" class="form-control-border"/>
+</div>
+
+<div class="form-group">
     <x-form.input type="number" min="1" id="price_stock" name="price_stock" label="Price Stock: "
                   :value="$project->price_stock" class="form-control-border"/>
+</div>
+
+<div class="col-md-4 form-group">
+    <label for="image_path">Image Path</label>
+    <input type="file" name="image_path[]" id="image_path" accept="image/*" multiple
+           class="uploadButton-input @error('image_path') is-invalid @enderror">
+
+    @if (is_array($project->image_path))
+        <div>
+            <ul>
+                @foreach ($project->image_path as $file)
+                    <li><a href="{{ asset('uploads/projects/' . $file) }}">{{ basename($file) }}</a></li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    @error('image_path')
+    <p class="invalid-feedback">{{$message}}</p>
+    @enderror
 </div>
 
 

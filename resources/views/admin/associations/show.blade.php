@@ -1,6 +1,6 @@
-@extends('layouts.dashboard')
+@extends('layouts.dashboard_admin')
 
-@section('page-title', 'Show Association')
+@section('page-title', 'عرض الجمعية')
 
 @section('content')
     <div class="container">

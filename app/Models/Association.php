@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use \Illuminate\Foundation\Auth\User;
+use Illuminate\Notifications\Notifiable;
 
 
 class Association extends User
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     protected  $fillable =[ // الي بدي اسمح الهم
         'name',
@@ -17,6 +18,7 @@ class Association extends User
         'password',
         'image_path',
         'remember_token',
+        'image_path',
     ];
 
     public function projects()

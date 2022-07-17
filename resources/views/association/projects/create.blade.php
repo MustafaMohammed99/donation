@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.dashboard_association')
 
 @section('page-title', 'Create Project')
 
@@ -13,7 +13,7 @@
                 </ul>
             </div>
         @endif
-        <form action="{{route('projects.store')}}" method="post">
+        <form action="{{route('projects.store')}}" method="post" enctype="multipart/form-data">
             @csrf
             @include('association.projects._form')
         </form>
