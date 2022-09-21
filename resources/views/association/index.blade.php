@@ -1,57 +1,52 @@
 @extends('layouts.dashboard_association')
 
-@section('page-title', "Home")
+@section('page-title', "الصفحة الرئيسية")
 
 @section('content')
 
-    <div class="row">
-        <!-- ./col -->
-        <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-                <div class="inner">
-                    <h3>{{$count_projects?? '-'}}</h3>
 
-                    <p>Count Projects</p>
+    <div class="container-fluid">
+        <div class="row invoice-card-row">
+            <div class="col-xl-3 col-xxl-3 col-sm-6">
+                <div class="card bg-primary invoice-card">
+                    <div class="card-body ">
+                        <div>
+                            <h2 class="text-white invoice-num">{{$count_projects?? '-'}}</h2>
+                            <p class="text-white fs-18" >عدد المشاريع</p>
+                            <a href="{{route('projects.index')}}" class="small-box-footer text-white">مزيد من المعلومات
+                                <i class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
                 </div>
-                <div class="icon">
-                    <i class="ion ion-stats-bars"></i>
+            </div>
+
+            <div class="col-xl-3 col-xxl-3 col-sm-6">
+                <div class="card bg-secondary invoice-card">
+                    <div class="card-body ">
+                        <div>
+                            <h2 class="text-white invoice-num">{{$sum_received_amount?? '-'}}</h2>
+                            <p class="text-white fs-18">مجموع التبرعات</p>
+                            <a href="#" class="small-box-footer text-white">مزيد من المعلومات <i class="fas fa-arrow-circle-right"></i></a>
+
+                        </div>
+                    </div>
                 </div>
-                <a href="{{route('projects.index')}}" class="small-box-footer">More info <i
-                        class="fas fa-arrow-circle-right"></i></a>
+            </div>
+
+            <div class="col-xl-3 col-xxl-3 col-sm-6">
+                <div class="card bg-dark invoice-card">
+                    <div class="card-body ">
+                        <div>
+                            <h2 class="text-white invoice-num">{{$sum_num_beneficiaries?? '-'}}</h2>
+                            <p class="text-white fs-18">عدد المستفيدين</p>
+                            <a href="#" class="small-box-footer text-white">مزيد من المعلومات <i class="fas fa-arrow-circle-right"></i></a>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-                <div class="inner">
-                    <h3>{{$sum_received_amount?? '-'}}</h3>
 
-                    <p>Total Donations</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-person-add"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3>{{$sum_num_beneficiaries?? '-'}}</h3>
-
-                    <p>Count Beneficiaries</p>
-                </div>
-                <div class="icon">
-                    <i class="ion ion-pie-graph"></i>
-                </div>
-                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-        </div>
-        <!-- ./col -->
     </div>
 
 @endsection

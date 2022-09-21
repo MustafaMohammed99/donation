@@ -19,11 +19,12 @@ class   LogoutResponse implements LogoutResponseContract
 
 //        $user = Auth::guard(config('fortify.guard'))->user();
 
-        dd( "session" . Session::get("type_user"));
-        if (config('fortify.guard') === "admin") {
-            Session::put('type_user', "admin");
-        } elseif (config('fortify.guard') === "association") {
-            Session::put('type_user', "association");
-        }
+//        dd( "session" . Session::get("type_user"));
+//        if (config('fortify.guard') === "admin") {
+//            Session::put('type_user', "admin");
+//        } elseif (config('fortify.guard') === "association") {
+//            Session::put('type_user', "association");
+//        }
+        return redirect()->route('donation.started');
     }
 }

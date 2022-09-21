@@ -35,5 +35,8 @@ return [
         'secret_key' => env('THAWANI_SECRET_KEY'),
         'publishable_key' => env('THAWANI_Publishable_KEY'),
         'mode' => 'test',
+    ],
+    'fcm' => [
+        'key' => env('FCM_SECRET_KEY')
     ]
 ];

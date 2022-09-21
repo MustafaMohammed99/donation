@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BasketResource;
 use App\Http\Resources\SuccessResource;
 use App\Models\Basket;
 use App\Models\User;
@@ -15,15 +16,21 @@ class BasketController extends Controller
     public function index()
     {
         $user = Auth::guard('sanctum')->user();
-        $basket = Basket::with(['project'])
+//        $user = User::find(10);
+        $basket = Basket::with(['project.projects_paths','project.category:id,name','project.association:id,name'])
             ->where('user_id', '=', $user->id)
             ->get();
         if ($basket)
-            return new SuccessResource($basket);
+            return [
+                'count_basket' =>$basket->sum('amount') ,
+                'basket' =>  BasketResource::collection($basket),
+                'status' => true,
+                'message' => ''
+            ];
 
         return [
             'status' => false,
-            'message'=>''
+            'message' => ''
         ];
     }
 
@@ -38,7 +45,7 @@ class BasketController extends Controller
         try {
             $check = User::where('id', '=', $user->id)->exists();
             if ($check) {
-                $basket = Basket::create($request->all()+ ['user_id' => $user->id]);
+                $basket = Basket::create($request->all() + ['user_id' => $user->id]);
                 if ($basket) {
                     return new SuccessResource($basket);
                 }

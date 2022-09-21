@@ -22,32 +22,49 @@ class ProfileController extends Controller
 //            'pass' => decrypt($user->first()->password),
             'status' => true,
             'message' => 'Success Process :)',
-            'data' => [
-                'user' => $user,
-
-            ],
+            'data' => $user,
         ];
     }
 
-
-    public function update(Request $request)
+    public function check_password(Request $request)
     {
         $user = Auth::guard('sanctum')->user();
         $request->validate([
             'password' => ['required'],
         ]);
-        $result = $user->update([
-            'password' => Hash::make($request['password']),
+
+
+    }
+
+    public function update(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
+        $request->validate([
+            'old_password' => ['required'],
+            'new_password' => ['required'],
         ]);
-        if ($result)
+        if (Hash::check($request->old_password, $user->password)) {
+
+            $result = $user->update([
+                'password' => Hash::make($request['password']),
+            ]);
             return [
                 'status' => true,
                 'message' => 'Success update password :)',
-                'data' => $result
-            ]; else
-            return [
-                "message" => "update operation has been failed"
+                'data' => [
+                    'check'=> $result
+                ]
             ];
+        }
+
+        return [
+            'status' => true,
+            'message' => 'old password is not match :)',
+            'data' => [
+                'check'=> false
+            ]
+        ];
+
     }
 
 }

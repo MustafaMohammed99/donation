@@ -23,21 +23,13 @@ class User extends Authenticatable
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+
     protected $hidden = [
-//        'password',
+        'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -53,4 +45,19 @@ class User extends Authenticatable
         return $this->hasMany(Basket::class, 'user_id', 'id');
     }
 
+
+    public function routeNotificationForFcm($notification = null)
+    {
+        return $this->deviceTokens()->pluck('token')->toArray();
+    }
+
+    public function deviceTokens()
+    {
+        return $this->hasMany(DeviceToken::class,'user_id','id');
+    }
+
+    public function userNotifications()
+    {
+        return $this->hasMany(MobileNotification::class,'user_id','id');
+    }
 }

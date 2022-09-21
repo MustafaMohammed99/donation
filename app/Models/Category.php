@@ -14,6 +14,9 @@ class Category extends Model
         'id',
         'image_path',
     ];
+
+
+
     public function projects()
     {
         return $this->hasMany(Project::class, 'category_id', 'id');

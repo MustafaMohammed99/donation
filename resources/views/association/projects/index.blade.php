@@ -18,54 +18,54 @@
                             <li class="nav-item">
                                 <a class="nav-link active" id="custom-tabs-one-accepted-tab" data-toggle="pill"
                                    href="#custom-tabs-one-accepted" role="tab"
-                                   aria-controls="custom-tabs-one-accepted" aria-selected="true">Accepted</a>
+                                   aria-controls="custom-tabs-one-accepted" aria-selected="true">المقبولة</a>
                             </li>
 
                             <li class="nav-item">
                                 <a class="nav-link" id="custom-tabs-one-pending-tab" data-toggle="pill"
                                    href="#custom-tabs-one-pending" role="tab"
-                                   aria-controls="custom-tabs-one-pending" aria-selected="false">Pending</a>
+                                   aria-controls="custom-tabs-one-pending" aria-selected="false">قيد انتظار القبول</a>
                             </li>
 
                             <li class="nav-item">
                                 <a class="nav-link" id="custom-tabs-one-declined-tab" data-toggle="pill"
                                    href="#custom-tabs-one-declined" role="tab"
-                                   aria-controls="custom-tabs-one-declined" aria-selected="false">Declined</a>
+                                   aria-controls="custom-tabs-one-declined" aria-selected="false">المرفوضة</a>
                             </li>
 
 
                             <li class="nav-item">
                                 <a class="nav-link" id="custom-tabs-one-pending-stopping-tab" data-toggle="pill"
                                    href="#custom-tabs-one-pending-stopping" role="tab"
-                                   aria-controls="custom-tabs-one-pending-stopping" aria-selected="false">Pending
-                                    Stopping</a>
+                                   aria-controls="custom-tabs-one-pending-stopping" aria-selected="false">قيد انتظار
+                                    التوقيف</a>
                             </li>
 
 
                             <li class="nav-item">
                                 <a class="nav-link" id="custom-tabs-one-declined-stopping-tab" data-toggle="pill"
                                    href="#custom-tabs-one-declined-stopping" role="tab"
-                                   aria-controls="custom-tabs-one-declined-stopping" aria-selected="false">Declined
-                                    Stopping</a>
+                                   aria-controls="custom-tabs-one-declined-stopping" aria-selected="false">مرفوضة
+                                    التوقيف</a>
                             </li>
 
                             <li class="nav-item">
                                 <a class="nav-link" id="custom-tabs-one-accepted-stopping-tab" data-toggle="pill"
                                    href="#custom-tabs-one-accepted-stopping" role="tab"
-                                   aria-controls="custom-tabs-one-accepted-stopping" aria-selected="false">Accept
-                                    Stopping</a>
+                                   aria-controls="custom-tabs-one-accepted-stopping" aria-selected="false">مقبولة
+                                    التوقيف</a>
                             </li>
 
                             <li class="nav-item">
                                 <a class="nav-link" id="custom-tabs-one-complete-tab" data-toggle="pill"
                                    href="#custom-tabs-one-complete" role="tab"
-                                   aria-controls="custom-tabs-one-complete" aria-selected="false">Completed</a>
+                                   aria-controls="custom-tabs-one-complete" aria-selected="false">مكتملة</a>
                             </li>
 
                             <li class="nav-item">
                                 <a class="nav-link" id="custom-tabs-one-failed-tab" data-toggle="pill"
                                    href="#custom-tabs-one-failed" role="tab"
-                                   aria-controls="custom-tabs-one-failed" aria-selected="false">Failed</a>
+                                   aria-controls="custom-tabs-one-failed" aria-selected="false">فاشلة</a>
                             </li>
 
 
@@ -84,13 +84,12 @@
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
-                                                        <th>Category</th>
-                                                        <th>Title</th>
-                                                        <th>Require Amount</th>
-                                                        <th>Received Amount</th>
-                                                        <th>Created At</th>
-                                                        <th>Edit</th>
-                                                        <th>stop</th>
+                                                        <th>اسم القسم</th>
+                                                        <th> عنوان المشروع</th>
+                                                        <th> المبلغ المطلوب</th>
+                                                        <th> المبلغ المستلم</th>
+                                                        <th> تاريخ الانشاء</th>
+                                                        <th>عمليات</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -106,14 +105,16 @@
                                                             <td>{{$project->start_period}}</td>
                                                             <td>
                                                                 <a
-                                                                    href="{{ route('projects.edit',['project' => $project->id]) }}"
-                                                                    class="btn btn-sm btn-dark">Edit
+                                                                    href="{{ route('projects.edit_accepted',['project' => $project->id]) }}"
+                                                                    class="btn btn-sm btn-dark">تعديل
                                                                 </a>
-                                                            </td>
-                                                            <td>
                                                                 <a
-                                                                    href="{{ route('projects.detail_stopping',['project' => $project->id]) }}"
-                                                                    class="btn btn-sm btn-danger">stop
+                                                                    href="{{ route('projects.detail_stopping',['project' => $project->id, 'type'=>'stopping']) }}"
+                                                                    class="btn btn-sm btn-danger">إيقاف
+                                                                </a>
+                                                                <a
+                                                                    href="{{ route('projects.detail_stopping',['project' => $project->id,'type'=>'failed']) }}"
+                                                                    class="btn btn-sm btn-danger">إفشال
                                                                 </a>
                                                             </td>
                                                         </tr>
@@ -145,10 +146,12 @@
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
-                                                        <th>Category</th>
-                                                        <th>Title</th>
-                                                        <th>Require Amount</th>
-                                                        <th>Created At</th>
+                                                        <th>اسم القسم</th>
+                                                        <th> عنوان المشروع</th>
+                                                        <th> المبلغ المطلوب</th>
+                                                        <th> تاريخ الانشاء</th>
+                                                        <th>عمليات</th>
+
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -158,7 +161,17 @@
                                                             <td>{{$project->title}}</td>
                                                             <td>{{$project->require_amount}}</td>
                                                             <td>{{$project->created_at}}</td>
+                                                            <td>
+                                                                <a
+                                                                    href="{{ route('projects.edit_pending',['project' => $project->id]) }}"
+                                                                    class="btn btn-sm btn-dark">تعديل
+                                                                </a>
 
+                                                                <a
+                                                                    href="{{ route('projects.detail_stopping',['project' => $project->id,'type'=>'failed']) }}"
+                                                                    class="btn btn-sm btn-danger">إفشال
+                                                                </a>
+                                                            </td>
                                                         </tr>
                                                         <tr class="expandable-body d-none">
                                                             <td colspan="5">
@@ -194,10 +207,10 @@
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
-                                                        <th>Category</th>
-                                                        <th>Title</th>
-                                                        <th>Require Amount</th>
-                                                        <th>Created At</th>
+                                                        <th>اسم القسم</th>
+                                                        <th> عنوان المشروع</th>
+                                                        <th> المبلغ المطلوب</th>
+                                                        <th> تاريخ الانشاء</th>
 
                                                     </tr>
                                                     </thead>
@@ -244,10 +257,10 @@
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
-                                                        <th>Category</th>
-                                                        <th>Title</th>
-                                                        <th>Require Amount</th>
-                                                        <th>Created At</th>
+                                                        <th>اسم القسم</th>
+                                                        <th> عنوان المشروع</th>
+                                                        <th> المبلغ المطلوب</th>
+                                                        <th> تاريخ الانشاء</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -298,11 +311,11 @@
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
-                                                        <th>Category</th>
-                                                        <th>Title</th>
-                                                        <th>Require Amount</th>
-                                                        <th>Received Amount</th>
-                                                        <th>Created At</th>
+                                                        <th>اسم القسم</th>
+                                                        <th> عنوان المشروع</th>
+                                                        <th> المبلغ المطلوب</th>
+                                                        <th> المبلغ المستلم</th>
+                                                        <th> تاريخ الانشاء</th>
 
                                                     </tr>
                                                     </thead>
@@ -356,10 +369,10 @@
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
-                                                        <th>Category</th>
-                                                        <th>Title</th>
-                                                        <th>Require Amount</th>
-                                                        <th>Created At</th>
+                                                        <th>اسم القسم</th>
+                                                        <th> عنوان المشروع</th>
+                                                        <th> المبلغ المطلوب</th>
+                                                        <th> تاريخ الانشاء</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -409,10 +422,10 @@
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
-                                                        <th>Category</th>
-                                                        <th>Title</th>
-                                                        <th>Require Amount</th>
-                                                        <th>Created At</th>
+                                                        <th>اسم القسم</th>
+                                                        <th> عنوان المشروع</th>
+                                                        <th> المبلغ المطلوب</th>
+                                                        <th> تاريخ الانشاء</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -458,10 +471,10 @@
                                                 <table class="table table-bordered table-hover">
                                                     <thead>
                                                     <tr>
-                                                        <th>Category</th>
-                                                        <th>Title</th>
-                                                        <th>Require Amount</th>
-                                                        <th>Created At</th>
+                                                        <th>اسم القسم</th>
+                                                        <th> عنوان المشروع</th>
+                                                        <th> المبلغ المطلوب</th>
+                                                        <th> تاريخ الانشاء</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody>

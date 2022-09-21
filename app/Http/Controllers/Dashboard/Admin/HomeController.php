@@ -16,8 +16,12 @@ class HomeController extends Controller
 
         $count_associations = Association::count();
         $count_projects = Project::where('status', '=', 'accepted')->count();
+        $count_projects_completed = Project:: where(function ($query) {
+            $query->Where('status', '=', 'completed')
+                ->orWhere('status', '=', 'completed_partial');
+        })->count();
         $sum_received_amount = Project::where('status', '=', 'accepted')->sum('received_amount');
-        $sum_num_beneficiaries = Project::where('status', '=', 'accepted')->sum('num_beneficiaries');
+        $sum_num_beneficiaries = Project::where('status', '=', 'completed')->sum('num_beneficiaries');
 
         $projects = Project::with(['category', 'association'])
             ->where('status', '=', 'pending')
@@ -28,8 +32,12 @@ class HomeController extends Controller
         }])->where('status', '=', 'pending')->get();
 
         return view('admin.index',
-            compact('count_associations', 'count_projects',
+            compact('count_associations', 'count_projects', 'count_projects_completed',
                 'sum_received_amount', 'sum_num_beneficiaries', 'projects', 'projects_stopping', 'flashMessage'));
+    }
+
+    public function started(){
+        return view('started');
     }
 
 }

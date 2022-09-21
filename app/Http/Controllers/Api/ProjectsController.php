@@ -16,7 +16,7 @@ class ProjectsController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['auth:sanctum'])->except(['index', 'show', 'search', 'home']);
+        $this->middleware(['auth:sanctum'])->except(['index', 'show', 'search', 'home', 'completed']);
     }
 
     public function index()
@@ -47,16 +47,20 @@ class ProjectsController extends Controller
         $sum_received_amount = Project::where('status', '=', 'accepted')->sum('received_amount');
         $sum_num_beneficiaries = Project::where('status', '=', 'accepted')->sum('num_beneficiaries');
         $count_project = Project::where('status', '=', 'accepted')->count();
-
+        $count_projects_completed = Project:: where(function ($query) {
+            $query->Where('status', '=', 'completed')
+                ->orWhere('status', '=', 'completed_partial');
+        })->count();
         return [
             'status' => true,
             'message' => 'Success Process :)',
             'data' => [
-                'count_project' => $count_project,
+                'count_project_open' => $count_project,
+                'count_project_completed' => $count_projects_completed,
                 'sum_received_amount' => $sum_received_amount,
                 'sum_num_beneficiaries' => (int)$sum_num_beneficiaries,
                 'banners' => $categories,
-                'projects' =>  ProjectResource::collection($entries),
+                'projects' => ProjectResource::collection($entries),
             ],
         ];
     }
@@ -113,6 +117,37 @@ class ProjectsController extends Controller
             ];
     }
 
+
+    public function completed()
+    {
+        $completed = Project::with([
+            'category',
+            'association:id,name,address,email',
+            'projects_paths'
+        ])->where('status', '=', 'completed')
+            ->get();
+        $completed_partial = Project::with([
+            'category',
+            'association:id,name,address,email',
+            'projects_paths',
+            'project_stopping' => function ($query) {
+                $query->where('status', '=', 'accepted');
+            }
+        ])->where('status', '=', 'completed_partial')
+            ->get();
+
+//        $project_completed = new ProjectResource($completed);
+//        $project_completed_partial = new ProjectResource($completed_partial);
+        return [
+            'status' => true,
+            'message' => 'Success Process :)',
+            'data' => [
+                'projects_completed_partial' => ProjectResource::collection($completed_partial),
+                'projects_completed' => ProjectResource::collection($completed),
+            ],
+        ];
+
+    }
 
 
 //    public function store(Request $request)

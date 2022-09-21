@@ -28,7 +28,7 @@ class ProfileController extends Controller
 
         return redirect()
             ->route('associationHome.index')
-            ->with('success', 'Associations updated!');
+            ->with('success', 'تم تحديث الجمعية بنجاح!');
     }
 
     protected $rules = [

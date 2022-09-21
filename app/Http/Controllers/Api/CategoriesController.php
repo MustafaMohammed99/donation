@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CetegoryResource;
 use App\Http\Resources\ProjectResource;
 use App\Http\Resources\SuccessResource;
 use App\Models\Category;
@@ -24,14 +25,20 @@ class CategoriesController extends Controller
 
     public function show(Category $category)
     {
-        $entries = Category::with('projects:id,category_id,description,title')
+        $entries = Category::with(['projects' => function ($query) {
+            $query->with('projects_paths');
+            $query->where('status', '=', 'accepted');
+        }])
             ->where('id', '=', $category->id)
+
             ->get();
 
 //        $s= $entries->toArray();
         return [
             'status' => true,
-            'data' => $entries[0]->projects ,
+            'data' =>   CetegoryResource::collection($entries[0]->projects),
+//            'data' => $entries[0]->projects ,
+
             'message' => 'suc',
         ];
     }

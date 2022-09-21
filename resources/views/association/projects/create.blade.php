@@ -1,6 +1,6 @@
 @extends('layouts.dashboard_association')
 
-@section('page-title', 'Create Project')
+@section('page-title', 'انشاء مشروع')
 
 @section('content')
     <div class="container">

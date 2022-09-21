@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    {{--        <x-flash-message />--}}
+{{--            <x-flash-message />--}}
 
     @if ($flashMessage)
         <div class="alert alert-success"> {{ $flashMessage }} </div>
@@ -16,19 +16,19 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Count Projects</th>
-                        <th>Created At</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+{{--                        <th>ID</th>--}}
+                        <th>الاسم</th>
+                        <th>عدد مشاريع الفسم</th>
+                        <th>تاريخ الانشاء</th>
+                        <th>تعديل</th>
+                        <th>حذف</th>
                     </tr>
                     </thead>
                     <tbody>
 
                     @foreach ($categories as $category)
                         <tr>
-                            <td>{{ $category->id }}</td>
+{{--                            <td>{{ $category->id }}</td>--}}
                             <td>
                                 <a href="{{ route('categories.show', ['category' => $category->id]) }}">{{ $category->name }}</a>
                             </td>

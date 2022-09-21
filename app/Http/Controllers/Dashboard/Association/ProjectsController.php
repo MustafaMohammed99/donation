@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard\Association;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Association;
 use App\Models\Category;
 use App\Models\Project;
@@ -74,7 +75,6 @@ class ProjectsController extends Controller
             'projects_declined_stopping' => $projects_declined_stopping,
             'flashMessage' => $flashMessage,
         ]);
-
     }
 
     public function create()
@@ -92,46 +92,75 @@ class ProjectsController extends Controller
         $project = Project::create($request->all() + ['association_id' => $association->id, 'received_amount' => 0]);
         $this->uploadImage_Path($request, $project->id);
 
-
         return redirect()
             ->route('projects.index')
-            ->with('success', 'Project created!');
+            ->with('success', "تم ارسال طلب قبول  مشروع $project->title   بنجاح");
     }
 
-    public function edit(Project $project)
+    public function edit_accepted(Project $project)
     {
         $project_path = ProjectPath::where('project_id', '=', $project->id)->get();
-
-        return view('association.projects.edit', [
+        return view('association.projects.edit_accepted', [
             'project' => $project,
-            'project_path' => $project_path
+            'project_path' => $project_path,
+        ]);
+    }
+
+    public function edit_pending(Project $project)
+    {
+        $project_path = ProjectPath::where('project_id', '=', $project->id)->get();
+        $categories = Category::all();
+        return view('association.projects.edit_pending', [
+            'project' => $project,
+            'project_path' => $project_path,
+            'categories' => $categories
         ]);
     }
 
     public function update(Request $request, Project $project)
     {
+        $request->validate($this->rules());
 
+        $data = $request->except('image_path');
+        $project->update($data);
         $this->uploadImage_Path($request, $project->id);
 
         return redirect()
             ->route('projects.index')
-            ->with('success', "Project $project->title is accepted!");
+            ->with('success', "تم تعديل مشروع $project->title بنجاح    ");
     }
 
 
-    public function detail_stopping(Project $project)
+    public function detail_stopping(Project $project, $type)
     {
-        return view('association.projects.detail_stopping', compact('project'));
+        return view('association.projects.detail_stopping', compact('project', 'type'));
     }
 
 
     public function stopping(Request $request)
     {
         $request->validate($this->rules_stopping());
-        StoppingProject::create($request->all() + ['association_id' => Auth::user()->getAuthIdentifier()]);
+        $project = Project::find($request->project_id);
+        if ($project->remaining_amount > ($project->require_amount/2)){
+            return redirect()
+                ->route('projects.index')
+                ->with('success', 'لا يمكنك ايقاف المشروع لان المبلغ اقل من  نصف المبلغ المطلوب للمشروع , يمكنك تقديم طلب افشال للمشروع   :)');
+        }else{
+            StoppingProject::create($request->all() + ['association_id' => Auth::user()->getAuthIdentifier()]);
+            return redirect()
+                ->route('projects.index')
+                ->with('success', 'تم ارسال طلب ايقاف المشروع :)');
+        }
+    }
+
+
+    public function failed(Request $request)
+    {
+        $request->validate($this->rules_stopping());
+        StoppingProject::create($request->all() + ['association_id' => Auth::user()->getAuthIdentifier(), 'status' => 'pending_failed']);
         return redirect()
             ->route('projects.index')
-            ->with('success', 'Added Stopping Project :)');
+            ->with('success', 'تم ارسال طلب افشال المششروع :)');
     }
 
     protected function uploadImage_Path(Request $request, $id)
@@ -170,7 +199,7 @@ class ProjectsController extends Controller
         'require_amount' => ['required', 'int'],
         'interval' => ['required', 'int'],
         'price_stock' => ['required', 'int'],
-        'image_path' => ['required'],
+        'image_path' => ['required', 'sometimes',],
     ];
 
     protected function rules_stopping()

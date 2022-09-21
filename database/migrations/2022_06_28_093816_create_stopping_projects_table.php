@@ -21,7 +21,9 @@ return new class extends Migration
             $table->foreignId('association_id')->nullable()
                 ->constrained('associations', 'id')
                 ->nullOnDelete();
-            $table->enum('status', ['pending', 'accepted', 'declined'])->default('pending');
+//            $table->enum('status', ['pending', 'accepted', 'declined'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'declined','pending_failed', 'accepted_failed', 'declined_failed', ])->default('pending');
+
             $table->text("reason_stopping");
             $table->timestamps();
         });

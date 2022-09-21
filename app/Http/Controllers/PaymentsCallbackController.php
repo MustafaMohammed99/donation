@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SuccessResource;
+use App\Models\Admin;
+use App\Models\Association;
 use App\Models\Basket;
 use App\Models\Payment;
 use App\Models\Project;
+use App\Notifications\NewProjectNotification;
 use App\Services\Payments\Thawani;
 use Exception;
 use Illuminate\Http\Request;
@@ -42,25 +45,44 @@ class PaymentsCallbackController extends Controller
                     'received_amount' => $received_amount + $project->received_amount
                 ]);
 
-                if ($project->received_amount == $project->require_amount){
+                if ($project->received_amount == $project->require_amount) {
                     $project->update([
                         'status' => 'completed'
                     ]);
+                    $association = Association::find($project->association_id);
+                    $association->notify(new NewProjectNotification($project, $association, 'completed', ''));
                 }
 
-                if ($user_id){
-                    Basket::create([
-                        'user_id' => $user_id,
-                        'project_id' => $project_id,
-                        'amount' => $received_amount,
-                    ]);
+                if ($user_id) {
+                    $result = Basket::
+                    where('project_id', '=', $project_id)
+                        ->where('user_id', '=', $user_id)
+                        ->get();
+
+                    if (count($result) === 0) {
+                        Basket::create([
+                            'user_id' => $user_id,
+                            'project_id' => $project_id,
+                            'amount' => $received_amount,
+                        ]);
+                    } else {
+                        Basket::where('project_id', '=', $project_id)
+                            ->where('user_id', '=', $user_id)
+                            ->update(['amount' => $result->first()->amount + $received_amount]);
+                    }
+
                 }
 
                 $payment->status = 'success';
                 $payment->data = $response;
                 $payment->save();
 
-                Session::forget(['payment_id', 'session_id', 'project_id', 'received_amount', 'user_id']);
+                Session::forget('payment_id');
+                Session::forget('session_id');
+                Session::forget('project_id');
+                Session::forget('received_amount');
+                Session::forget('user_id');
+//                Session::forget(['payment_id', 'session_id', 'project_id', 'received_amount', 'user_id']);
                 return view('payment_success');
             }
 

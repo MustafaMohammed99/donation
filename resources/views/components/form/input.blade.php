@@ -8,7 +8,10 @@
     id="{{$id}}"
     value="{{old($name, $value)}}"
     class="form-control @error("$name") is-invalid @enderror"
-    {{$attributes->class(['form-control','is-invalid'=>$errors->has($name)] )}} {{--    بتستدعي الاتربيوت وبتضيف على الكلاس اي كلاس تاني --}}
+    {{$attributes->class([
+    'form-control',
+    'is-invalid'=>$errors->has($name)
+    ] )}} {{--    بتستدعي الاتربيوت وبتضيف على الكلاس اي كلاس تاني --}}
 
 >
 @error("$name")

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('associations', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('address');
+            $table->enum('address', ['gaza', 'kan-younes', 'al-wsta','al-shmal','rafah']);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'association_id',
         'category_id',
@@ -25,7 +28,10 @@ class Project extends Model
         'interval',
     ];
 
-    use HasFactory;
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d',
+    ];
 
     public function category()
     {
@@ -47,16 +53,24 @@ class Project extends Model
         return $this->hasMany(ProjectPath::class, 'project_id', 'id');
     }
 
+    public function monitor_status_of_projects()
+    {
+        return $this->hasMany(Monitor_status_of_project::class, 'project_id', 'id');
+    }
+
+    public function project_notification()
+    {
+        return $this->hasMany(MobileNotification::class, 'project_id', 'id');
+    }
+
     public function favorites()
     {
-        return $this->hasMany(Favorite::class, 'project_id', 'id')
-            ->withDefault();
+        return $this->hasMany(Favorite::class, 'project_id', 'id');
     }
 
     public function basket()
     {
-        return $this->hasMany(Basket::class, 'project_id', 'id')
-            ->withDefault();
+        return $this->hasMany(Basket::class, 'project_id', 'id');
     }
 
 
@@ -71,9 +85,19 @@ class Project extends Model
         return $remaining_days;
     }
 
-    public function getRemainingAmount()
+    public function getRemainingAmountAttribute()
     {
 //  remaining_amount
         return $this->require_amount - $this->received_amount;
+    }
+
+    public function getDonationPeriodAttribute()
+    {
+//  donation_period
+        if (($this->status === 'completed' || $this->status === 'completed_partial' || $this->status === 'failed')
+            && $this->updated_at && $this->start_period) {
+            return Carbon::parse($this->start_period)->diffInDays($this->updated_at);
+        }
+        return 0;
     }
 }

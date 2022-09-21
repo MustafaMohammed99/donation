@@ -23,7 +23,7 @@ class AssociationsController extends Controller
 
     public function ajax()
     {
-        $query = Association::get();
+         $query = Association::get();
         return datatables($query)->make(true);
     }
 
@@ -40,7 +40,9 @@ class AssociationsController extends Controller
         $data = $request->except('image_path');
         $data['image_path'] = $this->uploadImage_Path($request);
         $data['password'] = Hash::make($request->password);
-        Association::create($data);
+// Project::create($request->all() + ['association_id' => $association->id, 'received_amount' => 0]);
+
+        Association::create($data + ['is']);
 
         return redirect()
             ->route('associations.index')

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Session;
 class PaymentsController extends Controller
 {
 
-    public function create($project_id, $amount)
+    public function create( $project_id, $amount, $user_id)
     {
 
         $client = new Thawani(
@@ -25,7 +25,7 @@ class PaymentsController extends Controller
 
 
         $data = [
-            'client_reference_id' => Auth::user()->id ?? "guest",
+            'client_reference_id' => $user_id ?? "guest",
             'mode' => 'payment',
             'products' => [
                 [
@@ -47,7 +47,7 @@ class PaymentsController extends Controller
             $session_id = $client->createCheckoutSession($data);
 
             $payment = Payment::forceCreate([
-                'user_id' => Auth::user()->id ?? null,
+                'user_id' => $user_id ?? null,
                 'gateway' => 'thawani',
                 'reference_id' => $session_id,
                 'amount' => $amount,
@@ -56,8 +56,8 @@ class PaymentsController extends Controller
 
             Session::put('session_id', $session_id);
             Session::put('payment_id', $payment->id);
-            Session::put('user_id', $payment->user_id);
             Session::put('project_id', $project_id);
+            Session::put('user_id', $user_id );
             Session::put('received_amount', $amount);
 
             return redirect()->away($client->getPayUrl($session_id));

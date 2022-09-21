@@ -13,8 +13,17 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $count_projects = Project::where('status', '=', 'accepted')->where('association_id', '=', $user->id)->count();
-        $sum_received_amount = Project::where('status', '=', 'accepted')->where('association_id', '=', $user->id)->sum('received_amount');
-        $sum_num_beneficiaries = Project::where('status', '=', 'accepted')->where('association_id', '=', $user->id)->sum('num_beneficiaries');
+
+        $sum_received_amount = Project::where(function ($query) {
+            $query->Where('status', '=', 'completed')
+                ->orWhere('status', '=', 'completed_partial');
+        })->where('association_id', '=', $user->id)->sum('received_amount');
+        $sum_num_beneficiaries = Project::where(function ($query) {
+            $query->Where('status', '=', 'completed')
+                ->orWhere('status', '=', 'completed_partial');
+        })->where('association_id', '=', $user->id)->sum('num_beneficiaries');
+
+//        $sum_num_beneficiaries = Project::where('status', '=', 'completed')->where('association_id', '=', $user->id)->sum('num_beneficiaries');
 
 
         return view('association.index',

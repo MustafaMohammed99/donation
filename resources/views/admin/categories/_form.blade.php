@@ -1,5 +1,5 @@
 <div class="form-group">
-    <label for="name">Name</label>
+    <label for="name">اسم القسم</label>
     <input type="text" name="name" id="name" value="{{old('name', $category->name)}}"
            class="form-control
            @error('name')
@@ -11,7 +11,7 @@
 </div>
 
 <div class="form-group">
-    <label for="image_path">Image Path</label>
+    <label for="image_path">صورة القسم</label>
     <input type="file" name="image_path" id="image_path" accept="image/*"
            value="{{old('image_path', $category->image_path)}}"
            class="uploadButton-input @error('image_path') is-invalid @enderror">
@@ -28,6 +28,6 @@
 </div>
 
 <div class="form-group">
-    <button class="btn-primary"> Save</button>
+    <button class="btn-primary"> حفظ</button>
 </div>
 

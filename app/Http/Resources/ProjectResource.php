@@ -9,7 +9,7 @@ class ProjectResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
@@ -17,8 +17,10 @@ class ProjectResource extends JsonResource
 //        return parent::toArray($request);
 
         return [
+            'reason' => $this->project_stopping->reason_stopping ?? '',
+//            'reason_stopping'=>$this->project_stopping ?? '',
             'id' => $this->id,
-            'image_path'=>$this->projects_paths->first()->image_path,
+            'image_path' => $this->projects_paths->first()->image_path ?? '',
             'association_id' => $this->association_id,
             'category_id' => $this->category_id,
             'price_stock' => $this->price_stock,
@@ -33,9 +35,9 @@ class ProjectResource extends JsonResource
             'description' => $this->description,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'category'=>[$this->category],
-            'association'=>[$this->association],
-            'projects_paths'=>$this->projects_paths,
+            'category' => [$this->category],
+            'association' => [$this->association],
+            'projects_paths' => $this->projects_paths,
         ];
     }
 }

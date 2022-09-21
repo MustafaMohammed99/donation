@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
+            $table->enum('address', ['gaza', 'kan-younes', 'al-wsta', 'al-shmal', 'rafah']);
+            $table->boolean('is_super_admin')->default(0);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
 
